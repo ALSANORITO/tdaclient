@@ -126,12 +126,12 @@ var Client = /** @class */ (function () {
                     case 2: return [2 /*return*/, _a.sent()];
                     case 3:
                         error_1 = _a.sent();
-                        message = "Failed to ".concat(config.method, " ").concat(config.url, ". ").concat(error_1, ".");
+                        message = "Failed to ".concat(config.method, " ").concat(config.url, ".\n").concat(error_1, ".");
                         if (error_1 && error_1.response && error_1.response.data)
                             message += "\nResponse from server ".concat(JSON.stringify(error_1.response.data, null, '\t'));
                         message += "\nRequest config: ".concat(JSON.stringify(config, null, '\t'));
                         // @ts-ignore
-                        return [2 /*return*/, Promise.reject(new Error(message, { cause: error_1 }))];
+                        throw new Error(message, { cause: error_1 });
                     case 4: return [2 /*return*/];
                 }
             });

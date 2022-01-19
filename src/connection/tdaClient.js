@@ -38,18 +38,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.TdaClient = void 0;
 var client_1 = require("./client");
-var accounts_1 = require("../api/accounts");
-var OptionChains_1 = require("../api/OptionChains");
 var priceHistory_1 = require("../api/priceHistory");
-var TdaClientBuilder_1 = require("./TdaClientBuilder");
+var accounts_1 = require("../api/accounts");
+var tdaClientBuilder_1 = require("./tdaClientBuilder");
 var orders_1 = require("../api/orders");
+var optionChain_1 = require("../api/optionChain");
+var quotes_1 = require("../api/quotes");
 var TdaClient = /** @class */ (function () {
     function TdaClient(config) {
         this.config = config;
         client_1["default"].addInterceptor(config.authorizationInterceptor);
     }
     TdaClient.from = function (config) {
-        return new TdaClientBuilder_1.TdaClientBuilder(config).build();
+        return new tdaClientBuilder_1.TdaClientBuilder(config).build();
     };
     TdaClient.prototype.getAccount = function () {
         return __awaiter(this, void 0, void 0, function () {
@@ -85,7 +86,27 @@ var TdaClient = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4 /*yield*/, (0, OptionChains_1.getOptionChain)(config)];
+                    case 0: return [4 /*yield*/, (0, optionChain_1.getOptionChain)(config)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    TdaClient.prototype.getQuotes = function (config) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, (0, quotes_1.getQuotes)(config)];
+                    case 1: return [2 /*return*/, _a.sent()];
+                }
+            });
+        });
+    };
+    TdaClient.prototype.cancelOrder = function (config) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, (0, orders_1.cancelOrder)(config)];
                     case 1: return [2 /*return*/, _a.sent()];
                 }
             });

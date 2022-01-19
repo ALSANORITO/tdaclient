@@ -114,7 +114,7 @@ var AuthorizationTokenInterceptor = /** @class */ (function (_super) {
                         secondResponse = _c.sent();
                         this.resetAuthTokenRefreshRetries();
                         return [2 /*return*/, secondResponse];
-                    case 3: return [2 /*return*/, error];
+                    case 3: throw error;
                 }
             });
         });

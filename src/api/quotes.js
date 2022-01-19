@@ -36,40 +36,44 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var tdaClient_1 = require("./connection/tdaClient");
-var optionChain_1 = require("./models/optionChain");
-var priceHistory_1 = require("./models/priceHistory");
-var credentials = require('../credentials.json');
-var tdaClient = tdaClient_1.TdaClient.from({
-    access_token: credentials.access_token,
-    client_id: credentials.client_id,
-    refresh_token: credentials.refresh_token
-});
-var main = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var data;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, tdaClient.getPriceHistory({
-                    symbol: 'TSLA',
-                    periodType: priceHistory_1.PeriodType.DAY,
-                    period: priceHistory_1.Period.ONE,
-                    frequencyType: priceHistory_1.FrequencyType.MINUTE,
-                    frequency: priceHistory_1.Frequency.ONE
-                })];
-            case 1:
-                data = _a.sent();
-                console.log(data, 'data');
-                return [4 /*yield*/, tdaClient.getOptionChain({
-                        symbol: 'TSLA',
-                        strikeCount: 10,
-                        includeQuotes: true,
-                        interval: 1,
-                        expMonth: optionChain_1.Month.DEC
-                    })];
-            case 2:
-                _a.sent();
-                return [2 /*return*/];
-        }
+exports.getQuotes = void 0;
+var connect_1 = require("../models/connect");
+var routes_config_1 = require("../connection/routes.config");
+var client_1 = require("../connection/client");
+var symbol_1 = require("../utils/symbol");
+/*
+All orders for a specific account or, if account ID isn't specified, orders will be returned for all linked accounts.
+ */
+function getQuotes(config) {
+    return __awaiter(this, void 0, void 0, function () {
+        var params, url, response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    params = processConfig(config);
+                    url = routes_config_1.QUOTES;
+                    return [4 /*yield*/, client_1["default"].get({
+                            url: url,
+                            params: params,
+                            responseType: connect_1.ResponseType.JSON,
+                            arrayFormat: connect_1.ArrayFormatType.COMMA
+                        })];
+                case 1:
+                    response = _a.sent();
+                    return [2 /*return*/, processResponse(response.data)];
+            }
+        });
     });
-}); };
-main();
+}
+exports.getQuotes = getQuotes;
+function processConfig(config) {
+    if (!config)
+        return;
+    var symbols = config.symbols;
+    return {
+        symbol: (0, symbol_1.convertToValidSymbols)(symbols).join(',')
+    };
+}
+function processResponse(data) {
+    return Object.values(data);
+}

@@ -40,6 +40,7 @@ exports.cancelOrder = exports.placeOrder = exports.getOrdersByQuery = void 0;
 var connect_1 = require("../models/connect");
 var routes_config_1 = require("../connection/routes.config");
 var client_1 = require("../connection/client");
+var round_1 = require("../utils/round");
 /*
 All orders for a specific account or, if account ID isn't specified, orders will be returned for all linked accounts.
  */
@@ -73,14 +74,15 @@ throttles and examples of orders.
  */
 function placeOrder(config) {
     return __awaiter(this, void 0, void 0, function () {
-        var url, response, orderId;
+        var url, order, response, orderId;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     url = generateOrderUrl(config.accountId);
+                    order = processOrder(config.order);
                     return [4 /*yield*/, client_1["default"].post({
                             url: url,
-                            data: config.order,
+                            data: order,
                             responseType: connect_1.ResponseType.JSON,
                             arrayFormat: connect_1.ArrayFormatType.COMMA
                         })];
@@ -95,6 +97,13 @@ function placeOrder(config) {
     });
 }
 exports.placeOrder = placeOrder;
+function processOrder(order) {
+    if (!order.price)
+        return order;
+    var price = Number(order.price.toFixed(2)) * 100;
+    order.price = (0, round_1.round)(price, 5) / 100;
+    return order;
+}
 function cancelOrder(config) {
     return __awaiter(this, void 0, void 0, function () {
         var url, response;
